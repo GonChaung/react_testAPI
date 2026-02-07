@@ -24,7 +24,6 @@ function UserManager() {
 
   const USERS_PER_PAGE = 5;
 
-  // Fetch users with pagination
   const fetchUsers = async (page = 1) => {
     setLoading(true);
     try {
@@ -47,14 +46,12 @@ function UserManager() {
     fetchUsers(currentPage);
   }, []);
 
-  // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     setError("");
   };
 
-  // Open modal for creating new user
   const openCreateModal = () => {
     setEditingUser(null);
     setFormData({
@@ -69,7 +66,6 @@ function UserManager() {
     setIsModalOpen(true);
   };
 
-  // Open modal for editing existing user
   const openEditModal = (user) => {
     setEditingUser(user);
     setFormData({
@@ -84,7 +80,6 @@ function UserManager() {
     setIsModalOpen(true);
   };
 
-  // Close modal
   const closeModal = () => {
     setIsModalOpen(false);
     setEditingUser(null);
@@ -99,14 +94,12 @@ function UserManager() {
     setError("");
   };
 
-  // Handle form submission (create or update)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
     try {
       if (editingUser) {
-        // Update existing user
         const updatePayload = {
           username: formData.username,
           email: formData.email,
@@ -114,7 +107,6 @@ function UserManager() {
           lastname: formData.lastname,
           status: formData.status,
         };
-        // Only include password if provided
         if (formData.password) {
           updatePayload.password = formData.password;
         }
@@ -131,7 +123,6 @@ function UserManager() {
           return;
         }
       } else {
-        // Create new user
         const response = await fetch(API_BASE, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -158,12 +149,10 @@ function UserManager() {
     }
   };
 
-  // Handle delete
   const handleDelete = async (id) => {
     try {
       await fetch(`${API_BASE}/${id}`, { method: "DELETE" });
       setDeleteConfirm(null);
-      // If we're on the last page and delete the only user, go to previous page
       if (users.length === 1 && currentPage > 1) {
         fetchUsers(currentPage - 1);
       } else {
@@ -174,7 +163,6 @@ function UserManager() {
     }
   };
 
-  // Handle pagination
   const goToPage = (page) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
@@ -182,7 +170,6 @@ function UserManager() {
     }
   };
 
-  // Get status badge class
   const getStatusClass = (status) => {
     switch (status?.toUpperCase()) {
       case "ACTIVE":
@@ -329,7 +316,6 @@ function UserManager() {
         </>
       )}
 
-      {/* Create/Edit Modal */}
       {isModalOpen && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -438,7 +424,6 @@ function UserManager() {
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
       {deleteConfirm && (
         <div className="modal-overlay" onClick={() => setDeleteConfirm(null)}>
           <div

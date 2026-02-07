@@ -21,7 +21,6 @@ function ItemManager() {
 
   const ITEMS_PER_PAGE = 5;
 
-  // Fetch items with pagination
   const fetchItems = async (page = 1) => {
     setLoading(true);
     try {
@@ -44,20 +43,17 @@ function ItemManager() {
     fetchItems(currentPage);
   }, []);
 
-  // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Open modal for creating new item
   const openCreateModal = () => {
     setEditingItem(null);
     setFormData({ name: "", category: "", price: "", status: "ACTIVE" });
     setIsModalOpen(true);
   };
 
-  // Open modal for editing existing item
   const openEditModal = (item) => {
     setEditingItem(item);
     setFormData({
@@ -69,14 +65,12 @@ function ItemManager() {
     setIsModalOpen(true);
   };
 
-  // Close modal
   const closeModal = () => {
     setIsModalOpen(false);
     setEditingItem(null);
     setFormData({ name: "", category: "", price: "", status: "ACTIVE" });
   };
 
-  // Handle form submission (create or update)
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -89,7 +83,6 @@ function ItemManager() {
 
     try {
       if (editingItem) {
-        // Update existing item
         await fetch(`${API_BASE}/${editingItem._id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -101,7 +94,6 @@ function ItemManager() {
           }),
         });
       } else {
-        // Create new item
         await fetch(API_BASE, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -115,12 +107,10 @@ function ItemManager() {
     }
   };
 
-  // Handle delete
   const handleDelete = async (id) => {
     try {
       await fetch(`${API_BASE}/${id}`, { method: "DELETE" });
       setDeleteConfirm(null);
-      // If we're on the last page and delete the only item, go to previous page
       if (items.length === 1 && currentPage > 1) {
         fetchItems(currentPage - 1);
       } else {
@@ -131,7 +121,6 @@ function ItemManager() {
     }
   };
 
-  // Handle pagination
   const goToPage = (page) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
@@ -139,7 +128,6 @@ function ItemManager() {
     }
   };
 
-  // Format price as currency
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -147,7 +135,6 @@ function ItemManager() {
     }).format(price || 0);
   };
 
-  // Get status badge class
   const getStatusClass = (status) => {
     switch (status?.toUpperCase()) {
       case "ACTIVE":
@@ -296,7 +283,6 @@ function ItemManager() {
         </>
       )}
 
-      {/* Create/Edit Modal */}
       {isModalOpen && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -375,7 +361,6 @@ function ItemManager() {
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
       {deleteConfirm && (
         <div className="modal-overlay" onClick={() => setDeleteConfirm(null)}>
           <div
