@@ -37,5 +37,10 @@
   border-bottom-color: #9c27b0;
 }
 
+.nav-tab.active:nth-child(3) {
+  color: #009688;
+  border-bottom-color: #009688;
+}
+
 .content {
 }
